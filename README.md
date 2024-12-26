@@ -18,6 +18,7 @@ Use the following types to categorize your commits:
 
 - **feat:** A new feature (new functionality).
 - **fix:** A bug fix.
+- **update:** Update code (versions, library compatibility)
 - **docs:** Documentation updates.
 - **style:** Changes to code formatting (doesn't affect logic, e.g., indentation, semicolons).
 - **refactor:** Refactoring code without changing functionality.
@@ -27,6 +28,7 @@ Use the following types to categorize your commits:
   ### Examples of Commit Messages:
 - **feat:** Add login feature
 - **fix:** Resolve issue with user authentication
+- **update:** Update content README file
 - **docs:** Update README with installation instructions
 - **style:** Fix formatting issues in the login form
 - **refactor:** Simplify login logic
