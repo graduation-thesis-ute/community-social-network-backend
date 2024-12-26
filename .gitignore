@@ -1,0 +1,22 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+target/
+
+# IDE configurations
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Sensitive data
+.env
+*.key
