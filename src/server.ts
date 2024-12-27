@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import http from "http";
 import { Server } from "socket.io";
 import connectDB from "./config/db";
+import fileRoutes from "./routes/fileRoutes";
 
 dotenv.config();
 connectDB();
@@ -18,10 +19,9 @@ const io = new Server(server, {
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
+app.use("/v1/file", fileRoutes);
 
 io.on("connection", (socket) => {
   console.log("New WebSocket connection");
