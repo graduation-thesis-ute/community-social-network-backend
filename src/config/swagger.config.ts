@@ -10,7 +10,7 @@ const swaggerOptions = {
     info: {
       title: "Zalo UTE API Documentation",
       version: "1.0.0",
-      description: "Documentation for your API",
+      description: "Documentation for Zalo UTE API",
     },
     servers: [
       {

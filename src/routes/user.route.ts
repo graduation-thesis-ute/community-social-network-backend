@@ -13,7 +13,7 @@ const router = express.Router();
 /**
  * @swagger
  * /api/v1/user/users:
- *  get:
+ *  post:
  *   summary: Create a new user
  *   tags: [User]
  *   requestBody:
