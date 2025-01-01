@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import http from "http";
+import "dotenv/config";
 import { Server } from "socket.io";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.config";
@@ -9,8 +9,8 @@ import connectDB from "./config/db.config";
 
 import fileRoutes from "./routes/file.route";
 import userRoutes from "./routes/user.route";
+import authRoutes from "./routes/auth.route";
 
-dotenv.config();
 connectDB();
 
 const app = express();
@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/file", fileRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 io.on("connection", (socket) => {
   console.log("New WebSocket connection");

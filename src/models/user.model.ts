@@ -1,41 +1,89 @@
-import e from "express";
 import mongoose, { Schema, Document } from "mongoose";
+import { formatDate, schemaOptions } from "../utils/schema.util";
+import { IRole } from "./role.model";
 
-export interface IUser extends Document {
+export interface IUser {
   name: string;
   email: string;
   password: string;
-  role: string;
-  // add more fields if needed
+  memberId: string;
+  phone?: string | null;
+  birthDate?: Date;
+  otp?: string | null;
+  bio?: string | null;
+  avatarUrl?: string | null;
+  status: 0 | 1;
+  secretKey?: string | null;
+  role: mongoose.Types.ObjectId | IRole;
+  isSuperAdmin: 0 | 1;
+  lastLogin: Date;
 }
 
-const userSchema: Schema = new Schema(
+const UserSchema = new Schema<IUser>(
   {
     name: {
       type: String,
       required: true,
-      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
-      trim: true,
     },
     password: {
       type: String,
       required: true,
-      trim: true,
+    },
+    memberId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    phone: {
+      type: String,
+      unique: true,
+    },
+    birthDate: {
+      type: Date,
+      default: null,
+      get: formatDate,
+    },
+    otp: {
+      type: String,
+      default: null,
+    },
+    bio: {
+      type: String,
+      default: null,
+    },
+    avatarUrl: {
+      type: String,
+      default: null,
+    },
+    status: {
+      type: Number,
+      enum: [0, 1], // 0: inactive, 1: active
+      default: 0,
+    },
+    secretKey: {
+      type: String,
+      default: null,
     },
     role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      type: Schema.Types.ObjectId,
+      ref: "Role",
+    },
+    isSuperAdmin: {
+      type: Number,
+      enum: [0, 1], // 0: inactive, 1: active
+      default: 0,
+    },
+    lastLogin: {
+      type: Date,
+      default: new Date(),
     },
   },
-  {
-    timestamps: true, // add timestamps createdAt and updatedAt
-  }
+  schemaOptions
 );
 
-export default mongoose.model<IUser>("User", userSchema);
+export const User = mongoose.model<IUser>("User", UserSchema);

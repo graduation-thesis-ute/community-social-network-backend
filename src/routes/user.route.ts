@@ -1,40 +1,8 @@
 import express from "express";
-import { createUser, getUsers } from "../controllers/user.controller";
+import { getUsers } from "../controllers/user.controller";
+import { auth } from "../middlewares/auth.middleware";
 
 const router = express.Router();
-
-/**
- * @swagger
- * tags:
- *  name: User
- *  description: User management
- */
-
-/**
- * @swagger
- * /api/v1/user/users:
- *  post:
- *   summary: Create a new user
- *   tags: [User]
- *   requestBody:
- *    required: true
- *    content:
- *     application/json:
- *      schema:
- *       $ref: '#/components/schemas/NewUser'
- *   responses:
- *    201:
- *     description: User created successfully
- *     content:
- *      application/json:
- *       schema:
- *        $ref: '#/components/schemas/User'
- *    400:
- *     description: User already exists
- *    500:
- *     description: Error creating user
- */
-router.post("/users", createUser);
 
 /**
  * @swagger
@@ -52,6 +20,6 @@ router.post("/users", createUser);
  *    500:
  *     description: Error getting users
  */
-router.get("/users", getUsers);
+router.get("/users", auth(), getUsers);
 
 export default router;

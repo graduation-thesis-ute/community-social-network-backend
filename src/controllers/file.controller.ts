@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { APIResponse } from "../services/api-response";
+import { APIResponse } from "../utils/api-response.util";
 
 // Upload a new file (image) to the cloudinary
 const uploadFile = async (req: Request, res: Response): Promise<void> => {

@@ -39,12 +39,12 @@ const swaggerOptions = {
               type: "string",
               example: "123456",
             },
-            role: {
+            memberId: {
               type: "string",
-              example: "user",
+              example: "21110294",
             },
           },
-          required: ["name", "email", "password"],
+          required: ["name", "email", "password", "memberId"],
         },
         User: {
           type: "object",
@@ -63,11 +63,11 @@ const swaggerOptions = {
             },
             password: {
               type: "string",
-              example: "123456",
+              example: "adhdadhajsdhas@3ad",
             },
-            role: {
+            memberId: {
               type: "string",
-              example: "user",
+              example: "21110294",
             },
             createdAt: {
               type: "string",
@@ -76,6 +76,35 @@ const swaggerOptions = {
             updatedAt: {
               type: "string",
               example: "2021-07-19T08:27:30.000Z",
+            },
+          },
+        },
+        LoginUser: {
+          type: "object",
+          properties: {
+            email: {
+              type: "string",
+              example: "vohuutai2369@gmail.com",
+            },
+            password: {
+              type: "string",
+              example: "123456",
+            },
+          },
+          required: ["email", "password"],
+        },
+        LoginResponse: {
+          type: "object",
+          properties: {
+            accessToken: {
+              type: "string",
+              example:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZjRlM2UyYjNlMGY4MDAxNWUxZjVkNyIsImVtYWlsIjoidm9odXV0YWkyMzY5QGdtYWlsLmNvbSIsImlhdCI6MTYyNjYwNjQwMiwiZXhwIjoxNjI2NjA2NzAyfQ",
+            },
+            refreshToken: {
+              type: "string",
+              example:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZjRlM2UyYjNlMGY4MDAxNWUxZjVkNyIsImVtYWlsIjoidm9odXV0YWkyMzY5QGdtYWlsLmNvbSIsImlhdCI6MTYyNjYwNjQwMiwiZXhwIjoxNjI2NjA2NzAyfQ",
             },
           },
         },

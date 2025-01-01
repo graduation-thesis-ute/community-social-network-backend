@@ -1,13 +1,13 @@
-interface SuccessResponse<T> {
+interface ISuccessResponse<T> {
   status: string;
   message: string;
   data?: T;
 }
 
-interface ErrorResponse {
+interface IErrorResponse {
   status: string;
   message: string;
   errors: any[];
 }
 
-export { SuccessResponse, ErrorResponse };
+export { ISuccessResponse, IErrorResponse };

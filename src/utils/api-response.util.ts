@@ -1,7 +1,7 @@
 import { Response } from "express";
 import {
-  SuccessResponse,
-  ErrorResponse,
+  ISuccessResponse,
+  IErrorResponse,
 } from "../interfaces/api-response.interface";
 
 class APIResponse {
@@ -11,7 +11,7 @@ class APIResponse {
     message: string = "Request successful",
     data?: T
   ): void {
-    const response: SuccessResponse<T> = {
+    const response: ISuccessResponse<T> = {
       status: "success",
       message,
       data,
@@ -25,7 +25,7 @@ class APIResponse {
     message: string = "Request failed",
     errors: any[] = []
   ): void {
-    const response: ErrorResponse = {
+    const response: IErrorResponse = {
       status: "fail",
       message,
       errors,
@@ -39,7 +39,7 @@ class APIResponse {
     message: string = "Internal server error",
     errors: any[] = []
   ): void {
-    const response: ErrorResponse = {
+    const response: IErrorResponse = {
       status: "error",
       message,
       errors,
