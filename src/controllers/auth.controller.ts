@@ -8,13 +8,16 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt.util";
-
-const refreshTokens: string[] = [];
+import {
+  revokeRefreshToken,
+  saveRefreshToken,
+  verifyRefreshTokenInDB,
+} from "../services/token.service";
 
 // Register user
 const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password, phone, memberId } = req.body;
+    const { name, email, password, memberId } = req.body;
 
     //check user exists
     const userExists = await User.findOne({ email });
@@ -23,14 +26,17 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     const hashedPassword = await encodePassword(password);
-    const newUser = await User.create({
+    await User.create({
       name,
       email,
       password: hashedPassword,
-      phone,
       memberId,
     });
-    return APIResponse.success(res, 201, "User created successfully", newUser);
+    return APIResponse.success(
+      res,
+      201,
+      "Account created successfully, please check your email to verify your account"
+    );
   } catch (error: any) {
     console.error("Error creating user:", error);
     return APIResponse.error(res, 500, "Error creating user", [error.message]);
@@ -39,9 +45,11 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
 
 // Login user
 const loginUser = async (req: Request, res: Response): Promise<void> => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ email: username }, { memberId: username }],
+    });
     if (!user) {
       return APIResponse.fail(res, 404, "User not found");
     }
@@ -53,14 +61,12 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     const accessToken = generateAccessToken({
       userId: user._id,
-      email: user.email,
     });
     const refreshToken = generateRefreshToken({
       userId: user._id,
-      email: user.email,
     });
 
-    refreshTokens.push(refreshToken);
+    await saveRefreshToken(user._id as string, refreshToken, 7 * 24 * 60 * 60);
     return APIResponse.success(res, 200, "Login successful", {
       accessToken,
       refreshToken,
@@ -82,24 +88,22 @@ const refreshAccessToken = async (
   if (!refreshToken) {
     return APIResponse.fail(res, 403, "Access denied, token missing");
   }
-
-  if (!refreshTokens.includes(refreshToken)) {
-    return APIResponse.fail(res, 403, "Access denied, invalid token");
-  }
-
   try {
-    const decoded = verifyRefreshToken(refreshToken);
-
-    if (refreshTokens.includes(refreshToken)) {
-      return APIResponse.fail(res, 403, "Access denied, invalid token");
-    }
-
+    verifyRefreshToken(refreshToken);
+    const { userId } = await verifyRefreshTokenInDB(refreshToken);
+    await revokeRefreshToken(refreshToken);
     const newAccessToken = generateAccessToken({
-      id: (decoded as any).id,
-      email: (decoded as any).email,
+      id: userId,
     });
+    const newRefreshToken = generateRefreshToken({
+      id: userId,
+    });
+
+    await saveRefreshToken(userId, newRefreshToken, 7 * 24 * 60 * 60);
+
     return APIResponse.success(res, 200, "Access token refreshed", {
       accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
     });
   } catch (error: any) {
     console.error("Error refreshing access token:", error);
@@ -112,15 +116,18 @@ const refreshAccessToken = async (
 // Logout user
 const logoutUser = async (req: Request, res: Response): Promise<void> => {
   const { refreshToken } = req.body;
-  if (!refreshToken) {
-    return APIResponse.fail(res, 403, "Access denied, token missing");
+  try {
+    if (!refreshToken) {
+      return APIResponse.fail(res, 403, "Access denied, token missing");
+    }
+    await revokeRefreshToken(refreshToken);
+    return APIResponse.success(res, 200, "User logged out successfully");
+  } catch (error: any) {
+    console.error("Error logging out user:", error);
+    return APIResponse.error(res, 500, "Error logging out user", [
+      error.message,
+    ]);
   }
-
-  const index = refreshTokens.indexOf(refreshToken);
-  if (index > -1) {
-    refreshTokens.splice(index, 1);
-  }
-  return APIResponse.success(res, 200, "User logged out successfully");
 };
 
 export { registerUser, loginUser, refreshAccessToken, logoutUser };

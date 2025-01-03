@@ -14,7 +14,7 @@ interface AuthRequest extends Request {
 
 interface JwtPayload {
   userId: string;
-  email: string;
+  iat: number;
 }
 
 const auth = (permissionCode?: string) => {
@@ -33,16 +33,14 @@ const auth = (permissionCode?: string) => {
     const token = authorization.split(" ")[1];
 
     try {
-      const { userId } = verifyAccessToken(token) as JwtPayload;
-      console.log("userId", userId);
-      console.log("token", process.env.ACCESS_TOKEN_SECRET);
-
+      const { userId} = verifyAccessToken(token) as JwtPayload;
       const user = await User.findById(userId).populate({
         path: "role",
         populate: {
           path: "permissions",
         },
       });
+
 
       if (!user) {
         APIResponse.fail(res, 404, "User not found");

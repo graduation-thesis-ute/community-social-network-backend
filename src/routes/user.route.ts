@@ -6,6 +6,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *  name: User
+ *  description: User management
+ */
+
+/**
+ * @swagger
  * /api/v1/user/users:
  *  get:
  *   summary: Get all users
@@ -16,7 +23,7 @@ const router = express.Router();
  *     content:
  *      application/json:
  *       schema:
- *        $ref: '#/components/schemas/User'
+ *        $ref: '#/components/schemas/UserOutput'
  *    500:
  *     description: Error getting users
  */
