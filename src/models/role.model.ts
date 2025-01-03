@@ -1,14 +1,14 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import { schemaOptions } from "../utils/schema.util";
 import { IPermission } from "./permission.model";
 
-export interface IRole {
+export interface IRole extends mongoose.Document {
   name: string;
   permissions: mongoose.Types.ObjectId[] | IPermission[];
   kind: 1 | 2 | 3;
 }
 
-const RoleSchema = new Schema<IRole>(
+const RoleSchema = new mongoose.Schema<IRole>(
   {
     name: {
       type: String,
@@ -16,7 +16,7 @@ const RoleSchema = new Schema<IRole>(
     },
     permissions: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Permission",
       },
     ],

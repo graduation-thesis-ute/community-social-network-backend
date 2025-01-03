@@ -1,14 +1,14 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 import { schemaOptions } from "../utils/schema.util";
 
-interface ISetting {
+interface ISetting extends mongoose.Document {
   title: string;
   keyName: string;
   roleKind: 1 | 2 | 3; // 1: user, 2: manager, 3: admin
   value: number;
 }
 
-const SettingSchema = new Schema<ISetting>(
+const SettingSchema = new mongoose.Schema<ISetting>(
   {
     title: {
       type: String,
@@ -31,4 +31,4 @@ const SettingSchema = new Schema<ISetting>(
   schemaOptions
 );
 
-export const Setting = model<ISetting>("Setting", SettingSchema);
+export const Setting = mongoose.model<ISetting>("Setting", SettingSchema);

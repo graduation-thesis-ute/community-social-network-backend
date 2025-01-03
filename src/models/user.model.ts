@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose from "mongoose";
 import { formatDate, schemaOptions } from "../utils/schema.util";
 import { IRole } from "./role.model";
 
-export interface IUser {
+export interface IUser extends mongoose.Document {
   name: string;
   email: string;
   password: string;
@@ -19,7 +19,7 @@ export interface IUser {
   lastLogin: Date;
 }
 
-const UserSchema = new Schema<IUser>(
+const UserSchema = new mongoose.Schema<IUser>(
   {
     name: {
       type: String,
@@ -70,7 +70,7 @@ const UserSchema = new Schema<IUser>(
       default: null,
     },
     role: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
     },
     isSuperAdmin: {

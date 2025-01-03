@@ -1,13 +1,13 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose from "mongoose";
 import { schemaOptions } from "../utils/schema.util";
 
-export interface IPermission {
+export interface IPermission extends mongoose.Document {
   name: string;
   groupName: string;
   permissionCode: string;
 }
 
-const PermissionSchema = new Schema<IPermission>(
+const PermissionSchema = new mongoose.Schema<IPermission>(
   {
     name: {
       type: String,
